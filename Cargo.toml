@@ -4,19 +4,18 @@ version = "0.1.0"
 authors = ["inyourface3445 <trenten46@gmail.com>"]
 repository = "https://github.com/inyourface34456/colors"
 homepage = "https://wasmer.io/"
-license = "MIT OR Apache-2.0"
+description = "a package for convrting colors"
+license = "MIT"
 edition = "2021"
-rust-version = "1.62.1"
 publish = false
 
 [package.metadata.wapm]
-namespace = "wasmer"
+namespace = "inyourface3445"
 abi = "none"
-bindings = { wai-version = "0.2.0", exports = "sha2.wai" }
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+bindings = { wai-version = "0.2.0", exports = "colors.wai" }
 
 [dependencies]
-wai-bindgen-rust = "0.2.0"
+wai-bindgen-rust = "0.2.3"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
