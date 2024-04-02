@@ -1,5 +1,10 @@
 resource color {
-    static new: func(r: float32, g: float32, b: float32) -> color
+    static new: func(red: float32, green: float32, blue: float32) -> color
+    static fromrgb: func(red: float32, green: float32, blue: float32) -> color
+    static fromhex: func(value: string) -> color
+    static fromhsl: func(hue: float32, sateration: float32, lightness: float32) -> color
+    static fromhsv: func(hue: float32, sateration: float32, value: float32) -> color
+    static fromcmyk: func(cyan: float32, magenta: float32, yellow: float32, black: float32) -> color
     tohex: func() -> string
     tohsl: func() -> tuple<float32, float32, float32>
     tohsv: func() -> tuple<float32, float32, float32>

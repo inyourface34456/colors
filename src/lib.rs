@@ -1,6 +1,7 @@
 #![allow(unused)]
 mod utils;
 
+use std::fmt::Display;
 use utils::*;
 use wai_bindgen_rust::Handle;
 
@@ -14,7 +15,47 @@ struct Color {
 
 impl crate::colors::Color for Color {
     fn new(r: f32, g: f32, b: f32) -> Handle<Color> {
+        Self::fromrgb(r, g, b)
+    }
+
+    fn fromrgb(r: f32, g: f32, b: f32) -> Handle<Color> {
         Self { r, g, b }.into()
+    }
+
+    fn fromcmyk(cyan: f32, magenta: f32, yellow: f32, black: f32) -> Handle<Color> {
+        Self {
+            r: 0.,
+            g: 0.,
+            b: 0.,
+        }
+        .into()
+    }
+
+    fn fromhex(value: String) -> Handle<Color> {
+        Self {
+            r: 0.,
+            g: 0.,
+            b: 0.,
+        }
+        .into()
+    }
+
+    fn fromhsl(hue: f32, sateration: f32, lightness: f32) -> Handle<Color> {
+        Self {
+            r: 0.,
+            g: 0.,
+            b: 0.,
+        }
+        .into()
+    }
+
+    fn fromhsv(hue: f32, sateration: f32, value: f32) -> Handle<Color> {
+        Self {
+            r: 0.,
+            g: 0.,
+            b: 0.,
+        }
+        .into()
     }
 
     fn tohex(&self) -> String {
@@ -98,12 +139,34 @@ impl crate::colors::Color for Color {
         let g = self.g / 255.;
         let b = self.b / 255.;
 
-        k = 1.-max(r,g,b);
-        c = (1.-r-k)/(1.-k);
-        m = (1.-g-k)/(1.-k);
-        y = (1.-b-k)/(1.-k);
+        k = 1. - max(r, g, b);
+        c = (1. - r - k) / (1. - k);
+        m = (1. - g - k) / (1. - k);
+        y = (1. - b - k) / (1. - k);
 
         (c, m, y, k)
+    }
+}
+
+impl Display for Color {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "rgb({}, {}, {})", self.r, self.g, self.b)
+    }
+}
+
+impl Into<(f32, f32, f32)> for Color {
+    fn into(self) -> (f32, f32, f32) {
+        (self.r, self.b, self.g)
+    }
+}
+
+impl From<(f32, f32, f32)> for Color {
+    fn from(value: (f32, f32, f32)) -> Self {
+        Self {
+            r: value.0,
+            g: value.1,
+            b: value.2,
+        }
     }
 }
 
