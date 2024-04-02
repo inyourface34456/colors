@@ -1,3 +1,7 @@
 resource color {
-    static new: func(r: u8, g: u8, b: u8) -> color
+    static new: func(r: float32, g: float32, b: float32) -> color
+    tohex: func() -> string
+    tohsl: func() -> tuple<float32, float32, float32>
+    tohsv: func() -> tuple<float32, float32, float32>
+    tocmyk: func() -> tuple<float32, float32, float32, float32>
 }
