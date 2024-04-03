@@ -1,6 +1,6 @@
 [package]
 name = "colors"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["inyourface3445 <trenten46@gmail.com>"]
 repository = "https://github.com/inyourface34456/colors"
 homepage = "https://wasmer.io/"
