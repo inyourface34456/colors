@@ -4,6 +4,7 @@ mod utils;
 use std::fmt::Display;
 use utils::*;
 use wai_bindgen_rust::Handle;
+use std::i32;
 
 wai_bindgen_rust::export!("colors.wai");
 
@@ -24,36 +25,78 @@ impl crate::colors::Color for Color {
 
     fn fromcmyk(cyan: f32, magenta: f32, yellow: f32, black: f32) -> Handle<Color> {
         Self {
-            r: 0.,
-            g: 0.,
-            b: 0.,
+            r: 255.*(1.-cyan)*(1.-black),
+            g: 255.*(1.-magenta)*(1.-black),
+            b: 255.*(1.-yellow)*(1.-black),
         }
         .into()
     }
 
     fn fromhex(value: String) -> Handle<Color> {
+        assert!(value.len() == 6 || value.len() == 7);
+        let values: [u8; 4];
+        
+        if value.starts_with('#') {
+            let value = &value[1..value.len()-1];
+            values = i32::from_str_radix(value, 16).expect("invalid syntax").to_le_bytes();
+        } else {
+            values = i32::from_str_radix(value.as_str(), 16).expect("invalid syntax").to_le_bytes();
+        }
+
+        assert!(values[3] == 0);
+        
         Self {
-            r: 0.,
-            g: 0.,
-            b: 0.,
+            r: values[0] as f32,
+            g: values[1] as f32,
+            b: values[2] as f32,
         }
         .into()
     }
 
     fn fromhsl(hue: f32, sateration: f32, lightness: f32) -> Handle<Color> {
+        let c = (1.-(2.*lightness-1.).abs())*sateration;
+        let x = c*(1.-((hue/60.)%2.-1.).abs());
+        let m = lightness-c/2.;
+        
+        let (mut r, mut g, mut b) = 
+        if hue >= 0.   && hue < 60.  {(c, x, 0.)} else 
+        if hue >= 60.  && hue < 120. {(x, c, 0.)} else 
+        if hue >= 120. && hue < 180. {(0., c, x)} else 
+        if hue >= 180. && hue < 240. {(0., x, c)} else 
+        if hue >= 240. && hue < 300. {(x, 0., c)} else 
+        if hue >= 300. && hue < 360. {(c, 0., x)} else
+        {panic!("invalid hue")};
+
+        (r, g, b) = ((r+m)*255., (g+m)*255., (b+m)*255.,);
+
         Self {
-            r: 0.,
-            g: 0.,
-            b: 0.,
+            r,
+            g,
+            b,
         }
         .into()
     }
 
     fn fromhsv(hue: f32, sateration: f32, value: f32) -> Handle<Color> {
+        let c = value*sateration;
+        let x = c*(1.-((hue/60.)%2.-1.).abs());
+        let m = value-c;
+        
+        let (mut r, mut g, mut b) = 
+        if hue >= 0.   && hue < 60.  {(c, x, 0.)} else 
+        if hue >= 60.  && hue < 120. {(x, c, 0.)} else 
+        if hue >= 120. && hue < 180. {(0., c, x)} else 
+        if hue >= 180. && hue < 240. {(0., x, c)} else 
+        if hue >= 240. && hue < 300. {(x, 0., c)} else 
+        if hue >= 300. && hue < 360. {(c, 0., x)} else
+        {panic!("invalid hue")};
+
+        (r, g, b) = ((r+m)*255., (g+m)*255., (b+m)*255.,);
+
         Self {
-            r: 0.,
-            g: 0.,
-            b: 0.,
+            r,
+            g,
+            b,
         }
         .into()
     }
